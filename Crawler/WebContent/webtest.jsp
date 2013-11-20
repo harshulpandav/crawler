@@ -41,19 +41,39 @@ for(int i=0;i<companies.length;i++){
 	stockDO.setUrl(url);
 	stockDO.setCode(code);
 	stockDO.setDesc(desc);
+	URL oracle2 = new URL(url);
+    BufferedReader in2 = new BufferedReader(new InputStreamReader(oracle2.openStream()));
+    
+    String inputLine2;
+    String page2 = "";
+    while ((inputLine2 = in2.readLine()) != null)
+    {
+    	page2= page2+"\n"+inputLine2;
+    }
+    String pageChopped = page2.substring(page2.indexOf("yfs_l84_"+code.toLowerCase()),page2.indexOf("%)</span>"));
+//    System.out.println(pageChopped);
+    double percent = Double.parseDouble(pageChopped.substring(pageChopped.indexOf("yfs_p43_"+code.toLowerCase()+"\">(")+("yfs_p43_"+code.toLowerCase()+"\">(").length()));
+    if(pageChopped.contains("alt=\"Down\"")) {
+    	percent = -percent;
+    }
+    double rate = Double.parseDouble(pageChopped.substring(pageChopped.indexOf(code.toLowerCase()+"\">")+(code.toLowerCase()+"\">").length(), pageChopped.indexOf("</span></span>")));
+    stockDO.setRate(rate);
+    stockDO.setPercentage(percent);
 	stockDOList.add(stockDO);
-	System.out.println(desc);
 }
         %>
   <TABLE border ="1">
-  <TR><Th>Company Code</Th><Th>Company Description</Th></TR>
+  <TR><Th>Company Code</Th><Th>Company Description</Th><TH>Value</TH><TH>Percentage</TH></TR>
   <% for(StockDO stockDO: stockDOList)
   {
-
+	  String color = "green";
+if(stockDO.getPercentage()<0) color = "red"; 
 	  %>
   <TR>
   <TD><%=stockDO.getCode() %></TD>
   <TD><%=stockDO.getDesc() %></TD>
+  <TD><%=stockDO.getRate() %></TD>
+  <TD><font color = <%=color %>><%=Math.abs(stockDO.getPercentage()) %></font></TD>
   </TR>
   <%} %>
   
