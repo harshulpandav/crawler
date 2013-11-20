@@ -61,6 +61,26 @@ for(int i=0;i<companies.length;i++){
     stockDO.setPercentage(percent);
 	stockDOList.add(stockDO);
 }
+Collections.sort(stockDOList, new Comparator<StockDO>(){
+	public int compare(StockDO o1, StockDO o2) 
+	{
+		if(o1.getPercentage() != null &&  o1.getPercentage() !=null ){
+		if(o1.getPercentage() < o2.getPercentage())
+		{
+			return 1;
+		}
+		else if(o1.getPercentage() > o2.getPercentage())
+		{
+			return -1;
+		}
+		else
+		{
+			return 0;
+		}
+		}
+		return 0;
+	}
+});
         %>
   <TABLE border ="1">
   <TR><Th>Company Code</Th><Th>Company Description</Th><TH>Value</TH><TH>Percentage</TH></TR>
@@ -73,7 +93,7 @@ if(stockDO.getPercentage()<0) color = "red";
   <TD><%=stockDO.getCode() %></TD>
   <TD><%=stockDO.getDesc() %></TD>
   <TD><%=stockDO.getRate() %></TD>
-  <TD><font color = <%=color %>><%=Math.abs(stockDO.getPercentage()) %></font></TD>
+  <TD><font color = <%=color %>><%=Math.abs(stockDO.getPercentage())+" %" %></font></TD>
   </TR>
   <%} %>
   
